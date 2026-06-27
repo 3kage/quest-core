@@ -16,28 +16,28 @@ if ($Version -eq "") {
 	$engineToc = Join-Path $root "QuestCore_Engine_Vanilla.toc"
 	if (-not (Test-Path $engineToc)) { $engineToc = Join-Path $root "QuestCore_Vanilla.toc" }
 	if (Test-Path $engineToc) {
-		$Version = (Select-String -Path $engineToc -Pattern '^## Version:\s*(.+)$').Matches[0].Groups[1].Value.Trim()
+		$verLine = Select-String -Path $engineToc -Pattern '^## Version:\s*(.+)$' | Select-Object -First 1
+		if ($verLine) { $Version = $verLine.Matches[0].Groups[1].Value.Trim() }
 	}
 }
 if ($Version -eq "") { $Version = "3.0.1" }
 
-$dataRoot = Join-Path (Split-Path $root -Parent) "QuestCore_Data"
+New-Item -ItemType Directory -Force -Path $OutDir | Out-Null
+$dataRoot = Join-Path $OutDir "_build\QuestCore_Data"
+if (Test-Path $dataRoot) { Remove-Item $dataRoot -Recurse -Force }
 
-Write-Host "Building data pack..."
-& (Join-Path $PSScriptRoot "Build-DataPack.ps1") -Flavor All | Out-Host
+Write-Host "Building data pack into $dataRoot ..."
+$dataRoot = & (Join-Path $PSScriptRoot "Build-DataPack.ps1") -Flavor All -OutDir $dataRoot
 
-# Sync version into generated TOCs
 Get-ChildItem -Path $dataRoot -Filter "*.toc" | ForEach-Object {
 	$content = [System.IO.File]::ReadAllText($_.FullName)
 	$content = $content -replace '(?m)^## Version:.*$', "## Version: $Version"
 	[System.IO.File]::WriteAllText($_.FullName, $content, [System.Text.UTF8Encoding]::new($false))
 }
 
-New-Item -ItemType Directory -Force -Path $OutDir | Out-Null
-
-function New-ReleaseZip([string]$SourceFolder, [string]$ZipPath) {
+function New-ReleaseZip([string]$SourcePath, [string]$ZipPath) {
 	if (Test-Path $ZipPath) { Remove-Item $ZipPath -Force }
-	Compress-Archive -Path $SourceFolder -DestinationPath $ZipPath -CompressionLevel Optimal
+	Compress-Archive -Path $SourcePath -DestinationPath $ZipPath -CompressionLevel Optimal
 	Write-Host "Created: $ZipPath"
 }
 
@@ -45,37 +45,34 @@ $vanillaZip = Join-Path $OutDir "QuestCore_Data_Vanilla-$Version.zip"
 $retailZip = Join-Path $OutDir "QuestCore_Data-$Version.zip"
 $updaterZip = Join-Path $OutDir "QuestCore-Updater.zip"
 
-# Zip must contain QuestCore_Data/ folder for Expand-Archive install
-$vanillaStage = Join-Path $env:TEMP ("qc_release_vanilla_" + [guid]::NewGuid().ToString("N"))
-$retailStage = Join-Path $env:TEMP ("qc_release_retail_" + [guid]::NewGuid().ToString("N"))
-try {
-	New-Item -ItemType Directory -Force -Path (Join-Path $vanillaStage "QuestCore_Data") | Out-Null
-	New-Item -ItemType Directory -Force -Path (Join-Path $retailStage "QuestCore_Data") | Out-Null
+$vanillaStage = Join-Path $OutDir "_stage_vanilla"
+$retailStage = Join-Path $OutDir "_stage_retail"
+if (Test-Path $vanillaStage) { Remove-Item $vanillaStage -Recurse -Force }
+if (Test-Path $retailStage) { Remove-Item $retailStage -Recurse -Force }
 
-	robocopy $dataRoot (Join-Path $vanillaStage "QuestCore_Data") /E /NFL /NDL /NJH /NJS /nc /ns /np | Out-Null
-	if ($LASTEXITCODE -ge 8) { throw "Stage copy failed (vanilla)" }
+New-Item -ItemType Directory -Force -Path (Join-Path $vanillaStage "QuestCore_Data") | Out-Null
+New-Item -ItemType Directory -Force -Path (Join-Path $retailStage "QuestCore_Data") | Out-Null
 
-	# Retail pack: Guides only (no Classic QuestDB) — use same tree but trim in future if split
-	robocopy $dataRoot (Join-Path $retailStage "QuestCore_Data") /E /NFL /NDL /NJH /NJS /nc /ns /np | Out-Null
-	if ($LASTEXITCODE -ge 8) { throw "Stage copy failed (retail)" }
-	Remove-Item (Join-Path $retailStage "QuestCore_Data\QuestCore_Data_Vanilla.toc") -Force -ErrorAction SilentlyContinue
-	Remove-Item (Join-Path $retailStage "QuestCore_Data\Data") -Recurse -Force -ErrorAction SilentlyContinue
+& robocopy $dataRoot (Join-Path $vanillaStage "QuestCore_Data") /E /NFL /NDL /NJH /NJS /nc /ns /np | Out-Null
+if ($LASTEXITCODE -ge 8) { throw "Stage copy failed (vanilla)" }
 
-	New-ReleaseZip $vanillaStage $vanillaZip
-	New-ReleaseZip $retailStage $retailZip
-}
-finally {
-	Remove-Item $vanillaStage -Recurse -Force -ErrorAction SilentlyContinue
-	Remove-Item $retailStage -Recurse -Force -ErrorAction SilentlyContinue
-}
+& robocopy $dataRoot (Join-Path $retailStage "QuestCore_Data") /E /NFL /NDL /NJH /NJS /nc /ns /np | Out-Null
+if ($LASTEXITCODE -ge 8) { throw "Stage copy failed (retail)" }
+Remove-Item (Join-Path $retailStage "QuestCore_Data\QuestCore_Data_Vanilla.toc") -Force -ErrorAction SilentlyContinue
+Remove-Item (Join-Path $retailStage "QuestCore_Data\Data") -Recurse -Force -ErrorAction SilentlyContinue
+
+New-ReleaseZip (Join-Path $vanillaStage "QuestCore_Data") $vanillaZip
+New-ReleaseZip (Join-Path $retailStage "QuestCore_Data") $retailZip
 
 $updaterDir = Join-Path $root "updater"
 New-ReleaseZip $updaterDir $updaterZip
 
+Remove-Item $vanillaStage -Recurse -Force -ErrorAction SilentlyContinue
+Remove-Item $retailStage -Recurse -Force -ErrorAction SilentlyContinue
+Remove-Item (Split-Path $dataRoot -Parent) -Recurse -Force -ErrorAction SilentlyContinue
+
 Write-Host ""
-Write-Host "Upload to GitHub Release ($Version):"
+Write-Host "Release zips ready ($Version):"
 Write-Host "  $vanillaZip"
 Write-Host "  $retailZip"
 Write-Host "  $updaterZip"
-Write-Host ""
-Write-Host "CurseForge: ship engine only (QuestCore_Engine*.toc)."

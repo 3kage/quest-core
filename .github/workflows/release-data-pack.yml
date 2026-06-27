@@ -5,6 +5,7 @@ on:
     tags:
       - "v*"
       - "data-v*"
+  workflow_dispatch:
 
 permissions:
   contents: write

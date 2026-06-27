@@ -1,3 +1,6 @@
 dist/
 QuestCore_Data/
 .cursor/
+dist/_build/
+dist/_stage_vanilla/
+dist/_stage_retail/
