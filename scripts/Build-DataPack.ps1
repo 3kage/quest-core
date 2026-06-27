@@ -20,11 +20,18 @@ New-Item -ItemType Directory -Force -Path $out | Out-Null
 New-Item -ItemType Directory -Force -Path (Join-Path $out "Guides") | Out-Null
 New-Item -ItemType Directory -Force -Path (Join-Path $out "Data") | Out-Null
 
+function Invoke-Robocopy([string]$From, [string]$To) {
+	$prev = $ErrorActionPreference
+	$ErrorActionPreference = "Continue"
+	& robocopy $From $To /E /NFL /NDL /NJH /NJS /nc /ns /np | Out-Null
+	$rc = $LASTEXITCODE
+	$ErrorActionPreference = $prev
+	if ($rc -ge 8) { throw "Copy failed ($rc): $From -> $To" }
+}
+
 function Copy-Tree($from, $to) {
 	if (-not (Test-Path $from)) { return }
-	& robocopy $from $to /E /NFL /NDL /NJH /NJS /nc /ns /np | Out-Null
-	$rc = $LASTEXITCODE
-	if ($rc -ge 8) { throw "Copy failed ($rc): $from -> $to" }
+	Invoke-Robocopy $from $to
 }
 
 Copy-Tree $srcGuides (Join-Path $out "Guides")

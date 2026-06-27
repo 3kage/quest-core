@@ -21,7 +21,6 @@ jobs:
         id: build
         shell: pwsh
         run: |
-          Set-StrictMode -Version Latest
           $ErrorActionPreference = 'Stop'
           $tag = $env:GITHUB_REF_NAME
           $version = $tag -replace '^(data-)?v', ''

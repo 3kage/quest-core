@@ -50,14 +50,21 @@ $retailStage = Join-Path $OutDir "_stage_retail"
 if (Test-Path $vanillaStage) { Remove-Item $vanillaStage -Recurse -Force }
 if (Test-Path $retailStage) { Remove-Item $retailStage -Recurse -Force }
 
+function Invoke-Robocopy([string]$From, [string]$To) {
+	$prev = $ErrorActionPreference
+	$ErrorActionPreference = "Continue"
+	& robocopy $From $To /E /NFL /NDL /NJH /NJS /nc /ns /np | Out-Null
+	$rc = $LASTEXITCODE
+	$ErrorActionPreference = $prev
+	if ($rc -ge 8) { throw "Copy failed ($rc): $From -> $To" }
+}
+
 New-Item -ItemType Directory -Force -Path (Join-Path $vanillaStage "QuestCore_Data") | Out-Null
 New-Item -ItemType Directory -Force -Path (Join-Path $retailStage "QuestCore_Data") | Out-Null
 
-& robocopy $dataRoot (Join-Path $vanillaStage "QuestCore_Data") /E /NFL /NDL /NJH /NJS /nc /ns /np | Out-Null
-if ($LASTEXITCODE -ge 8) { throw "Stage copy failed (vanilla)" }
+Invoke-Robocopy $dataRoot (Join-Path $vanillaStage "QuestCore_Data")
 
-& robocopy $dataRoot (Join-Path $retailStage "QuestCore_Data") /E /NFL /NDL /NJH /NJS /nc /ns /np | Out-Null
-if ($LASTEXITCODE -ge 8) { throw "Stage copy failed (retail)" }
+Invoke-Robocopy $dataRoot (Join-Path $retailStage "QuestCore_Data")
 Remove-Item (Join-Path $retailStage "QuestCore_Data\QuestCore_Data_Vanilla.toc") -Force -ErrorAction SilentlyContinue
 Remove-Item (Join-Path $retailStage "QuestCore_Data\Data") -Recurse -Force -ErrorAction SilentlyContinue
 
