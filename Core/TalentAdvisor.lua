@@ -1,0 +1,3 @@
+-- QuestCore: Talent Advisor (implemented in Core/Talents.lua).
+local addonName, QuestCore = ...
+-- QC.TalentAdvisor is defined by Core/Talents.lua

@@ -1,0 +1,6 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ FrameXML/UI.xsd">
+	<Script file="Guides.lua"/>
+	<Script file="Guides_FlavorRetail.lua"/>
+	<Include file="Library\Autoload_Retail.xml"/>
+	<Include file="Library\Poi\Poi.xml"/>
+</Ui>

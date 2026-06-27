@@ -1,0 +1,3 @@
+-- Sets guide manifest flavor before Progression (TBC/Cata/Mists) guides load.
+local addonName, QuestCore = ...
+QuestCore._guideManifestFlavor = "progression"

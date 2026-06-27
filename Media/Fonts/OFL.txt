@@ -1,0 +1,12 @@
+QuestCore bundled UI fonts (SIL Open Font License 1.1)
+https://openfontlicense.org/
+
+QuestCoreUI.ttf  — Noto Sans Regular (Latin, Cyrillic, Greek, Vietnamese)
+QuestCoreKR.ttf  — Noto Sans KR Regular (Korean)
+QuestCoreSC.ttf  — Noto Sans SC Regular (Simplified Chinese)
+QuestCoreTC.ttf  — Noto Sans TC Regular (Traditional Chinese)
+
+Source: https://github.com/googlefonts/noto-fonts
+         https://github.com/googlefonts/noto-cjk
+
+Re-download: scripts/Download-Fonts.ps1

@@ -1,0 +1,23 @@
+-- Bundled QuestCore guide
+if not QuestCore then return end
+
+if UnitFactionGroup("player")~="Horde" then return end
+QuestCore:RegisterGuide("Pets & Mounts Guides\\Mounts\\Ground Mounts\\Miscellaneous Mounts\\Elusive Emerald Hawkstrider",{
+startlevel=60.00,
+keywords={"blood","elf"},
+mounts={370620},
+patch='90205',
+mounttype='Ground',
+model={106262},
+description="This mount is earned by completing a Blood Elf-specific questline.",
+},[[
+leechsteps "Leveling Guides\\Shadowlands (50-70)\\Blood Elf Questline"
+step
+collect 1 Elusive Emerald Hawkstrider##191566 |complete hasmount(370620)
+step
+use the Elusive Emerald Hawkstrider##191566
+Learn the "Elusive Emerald Hawkstrider" Mount |learnmount Elusive Emerald Hawkstrider##370620
+step
+_Congratulations!_
+You Collected the "Elusive Emerald Hawkstrider" Mount.
+]])

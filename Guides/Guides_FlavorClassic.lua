@@ -1,0 +1,3 @@
+-- Sets guide manifest flavor before Classic Era includes load.
+local addonName, QuestCore = ...
+QuestCore._guideManifestFlavor = "classic"

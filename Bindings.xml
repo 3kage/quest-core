@@ -1,0 +1,20 @@
+<Bindings>
+	<Binding name="QUESTCORE_TOGGLE" header="QUESTCORE" category="QUESTCORE">
+		if QuestCore then QuestCore:ToggleTracker() end
+	</Binding>
+	<Binding name="QUESTCORE_MENU" category="QUESTCORE">
+		if QuestCore and QuestCore.GuideMenu then QuestCore.GuideMenu:Toggle() end
+	</Binding>
+	<Binding name="QUESTCORE_NEXT" category="QUESTCORE">
+		if QuestCore then QuestCore:NextStep() end
+	</Binding>
+	<Binding name="QUESTCORE_PREV" category="QUESTCORE">
+		if QuestCore then QuestCore:PrevStep() end
+	</Binding>
+	<Binding name="QUESTCORE_SKIP" category="QUESTCORE">
+		if QuestCore then QuestCore:MarkStepComplete(QuestCore.CurrentStepNum, true) end
+	</Binding>
+	<Binding name="QUESTCORE_OPTIONS" category="QUESTCORE">
+		if QuestCore and QuestCore.Options then QuestCore.Options:Toggle() end
+	</Binding>
+</Bindings>

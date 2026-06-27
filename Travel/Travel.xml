@@ -1,0 +1,22 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/FrameXML/UI.xsd">
+
+	<!-- Bundled manual travel database (portals / boats / zeppelins / items). -->
+
+	<Script file="data_maps.lua"/>
+
+	<Script file="data_transit.lua"/>
+
+	<Script file="data_items.lua"/>
+
+	<Script file="data_borders.lua"/>
+
+	<Script file="data_inns.lua"/>
+
+	<Script file="data_floorcrossings.lua"/>
+
+	<Script file="data_dungeons.lua"/>
+
+	<Script file="data_taxipoints.lua"/>
+
+</Ui>
+

@@ -1,0 +1,13 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ FrameXML/UI.xsd">
+
+	<!-- Bundled quest objective database (Classic Era). Loaded after DataLoader shim. -->
+
+	<Script file="Zones\areaIdToUiMapId.lua"/>
+	<Script file="Zones\subZoneToParentZone.lua"/>
+
+	<Script file="Classic\classicQuestDB.lua"/>
+	<Script file="Classic\classicNpcDB.lua"/>
+	<Script file="Classic\classicObjectDB.lua"/>
+	<Script file="Classic\classicItemDB.lua"/>
+
+</Ui>

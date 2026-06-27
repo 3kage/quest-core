@@ -1,0 +1,36 @@
+---
+description: QuestCore lives in retail; other clients use junctions to the same folder
+alwaysApply: true
+---
+
+# QuestCore — single folder (junctions)
+
+## Source of truth
+
+`D:\Games\World of Warcraft\_retail_\Interface\AddOns\QuestCore`
+
+The following paths are **directory junctions** to the same folder (do not copy or sync):
+
+- `D:\Games\World of Warcraft\_anniversary_\Interface\AddOns\QuestCore` (TBC)
+- `D:\Games\World of Warcraft\_classic_\Interface\AddOns\QuestCore` (Mists)
+- `D:\Games\World of Warcraft\_classic_era_\Interface\AddOns\QuestCore` (Classic Era)
+
+**Edit only under retail.** Changes appear in all clients automatically.
+
+Do **not** run `Sync-Clients.ps1`, robocopy, or mirror edits to other paths.
+
+Reference only (do not modify): sibling guide reference addon in the same AddOns folder.
+
+## Backups (optional cleanup)
+
+Pre-junction copies were kept as `QuestCore.pre-junction-backup` in each client's AddOns folder. Safe to delete once you confirm everything works.
+
+## Restore junctions (if broken)
+
+From PowerShell, after removing a broken `QuestCore` folder:
+
+```powershell
+New-Item -ItemType Junction -Path "D:\Games\World of Warcraft\_anniversary_\Interface\AddOns\QuestCore" -Target "D:\Games\World of Warcraft\_retail_\Interface\AddOns\QuestCore"
+```
+
+(Repeat for `_classic_` and `_classic_era_`.)

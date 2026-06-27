@@ -1,0 +1,78 @@
+## Interface: 11508
+## Title: |cff33d6ffQuest|r|cffffffffCore|r
+## Notes: QuestCore for WoW Classic Era (1.15.x). Taxi + hearth routing; no Retail capital portals.
+## Author: QuestCore
+## Version: 3.0.1
+## DefaultState: enabled
+## SavedVariables: QuestCoreDB
+
+Libs\Libs.xml
+
+Core\Compatibility.lua
+Core\Compat.lua
+Core\MapData.lua
+Core\QuestCore.lua
+Core\Locale.lua
+Core\Font.lua
+Core\DataPack.lua
+Core\Profiles.lua
+Core\GuideInclude.lua
+Core\Parser.lua
+Core\DisplayText.lua
+Core\Guide.lua
+Core\Step.lua
+Core\Goal.lua
+Core\GoalEvents.lua
+Core\GoalTypesExtended.lua
+Core\ConditionEnvExtended.lua
+Core\QuestDB.lua
+Core\QuestDB\DataLoader.lua
+Core\QuestDB\Schema.lua
+Data\QuestDB\QuestDB_Classic.xml
+Core\QuestDB\ZoneMaps.lua
+Core\QuestDB\Spawns.lua
+Core\QuestDataDB.lua
+Core\GuideStore.lua
+Core\State.lua
+Core\QuestAutomation.lua
+Core\AutoQuest.lua
+Core\Automation.lua
+Core\QuestRewards.lua
+Core\ScriptRunner.lua
+Core\Phase.lua
+Core\Travel.lua
+Core\TravelGraph.lua
+Core\Death.lua
+Core\POI.lua
+Core\QuestMapPins.lua
+Core\Cinematic.lua
+Core\Recorder.lua
+Core\GearAdvisor.lua
+Core\Talents.lua
+Core\Gold.lua
+Core\TalentAdvisor.lua
+Core\WorldQuests.lua
+Core\WhoWhere.lua
+Core\Broker.lua
+Core\Share.lua
+
+Travel\Travel.xml
+Core\TravelSeed.lua
+Core\TravelTest.lua
+
+UI\Skin.lua
+UI\GoalIcons.lua
+UI\Widgets.lua
+UI\Wizard.lua
+UI\ArrowSkins.lua
+UI\GuideFrame.lua
+UI\MainFrame.lua
+UI\GuideMenu.lua
+UI\MinimapButton.lua
+UI\Options.lua
+UI\GuideEditor.lua
+UI\History.lua
+UI\MapLineTemplate.xml
+UI\Waypoint.lua
+
+Guides\Guides_Classic.xml

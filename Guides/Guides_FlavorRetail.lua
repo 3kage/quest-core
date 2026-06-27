@@ -1,0 +1,3 @@
+-- Sets guide manifest flavor before bundled Retail guides load.
+local addonName, QuestCore = ...
+QuestCore._guideManifestFlavor = "retail"

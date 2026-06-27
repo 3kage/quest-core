@@ -1,0 +1,3 @@
+-- Legacy alias — quest automation lives in Core/QuestAutomation.lua.
+local addonName, QuestCore = ...
+QuestCore.AutoQuest = QuestCore.QuestAutomation
