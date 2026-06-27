@@ -19,7 +19,7 @@ jobs:
 
       - name: Build data pack and updater zips
         id: build
-        shell: pwsh
+        shell: powershell
         run: |
           $ErrorActionPreference = 'Stop'
           $tag = $env:GITHUB_REF_NAME
@@ -30,8 +30,9 @@ jobs:
           Write-Host "Release version: $version"
           Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
           ./scripts/Publish-DataRelease.ps1 -Version $version -OutDir dist
+          if (-not (Test-Path "dist/QuestCore-Updater.zip")) { throw "Build failed: dist/QuestCore-Updater.zip missing" }
           Get-ChildItem dist -File | Format-Table Name, Length
-          "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding ascii
+          Add-Content -Path $env:GITHUB_OUTPUT -Value "version=$version"
 
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
