@@ -83,3 +83,5 @@ Write-Host "Release zips ready ($Version):"
 Write-Host "  $vanillaZip"
 Write-Host "  $retailZip"
 Write-Host "  $updaterZip"
+
+exit 0
