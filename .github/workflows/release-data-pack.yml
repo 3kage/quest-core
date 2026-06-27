@@ -17,41 +17,38 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Resolve version from tag
-        id: version
+      - name: Build data pack and updater zips
+        id: build
         shell: pwsh
         run: |
-          $tag = "$env:GITHUB_REF_NAME"
+          Set-StrictMode -Version Latest
+          $ErrorActionPreference = 'Stop'
+          $tag = $env:GITHUB_REF_NAME
           $version = $tag -replace '^(data-)?v', ''
           if ($version -notmatch '^\d+\.\d+\.\d+') {
             throw "Tag must look like v3.0.1 or data-v3.0.1 (got: $tag)"
           }
-          "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
           Write-Host "Release version: $version"
-
-      - name: Build data pack and updater zips
-        shell: pwsh
-        env:
-          QC_RELEASE_VERSION: ${{ steps.version.outputs.version }}
-        run: |
           Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-          ./scripts/Publish-DataRelease.ps1 -Version $env:QC_RELEASE_VERSION -OutDir dist
+          ./scripts/Publish-DataRelease.ps1 -Version $version -OutDir dist
+          Get-ChildItem dist -File | Format-Table Name, Length
+          "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding ascii
 
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
-          name: QuestCore Data ${{ steps.version.outputs.version }}
+          name: QuestCore Data ${{ steps.build.outputs.version }}
           generate_release_notes: true
           files: |
-            dist/QuestCore_Data_Vanilla-${{ steps.version.outputs.version }}.zip
-            dist/QuestCore_Data-${{ steps.version.outputs.version }}.zip
+            dist/QuestCore_Data_Vanilla-${{ steps.build.outputs.version }}.zip
+            dist/QuestCore_Data-${{ steps.build.outputs.version }}.zip
             dist/QuestCore-Updater.zip
           body: |
-            ## QuestCore data pack ${{ steps.version.outputs.version }}
+            ## QuestCore data pack ${{ steps.build.outputs.version }}
 
-            - **QuestCore_Data_Vanilla-${{ steps.version.outputs.version }}.zip** — Classic Era + quest database
-            - **QuestCore_Data-${{ steps.version.outputs.version }}.zip** — Retail guides
-            - **QuestCore-Updater.zip** — auto-updater (double-click `Run Updater.bat` or use tray mode)
+            - **QuestCore_Data_Vanilla-${{ steps.build.outputs.version }}.zip** - Classic Era + quest database
+            - **QuestCore_Data-${{ steps.build.outputs.version }}.zip** - Retail guides
+            - **QuestCore-Updater.zip** - auto-updater (`Run Updater.bat` or tray mode)
 
             Engine (UI/code) updates remain on CurseForge.
